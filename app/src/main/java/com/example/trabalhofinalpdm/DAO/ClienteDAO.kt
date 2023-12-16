@@ -73,12 +73,12 @@ class ClienteDAO {
         })
     }
 
-    fun obterListaClientes(): MutableLiveData<List<Cliente>> {
+    fun obterListaClientes(): MutableList<Cliente> {
         val listaClientesLiveData = MutableLiveData<List<Cliente>>()
+        val listaClientes = mutableListOf<Cliente>()
 
         referencia.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val listaClientes = mutableListOf<Cliente>()
 
                 for (clienteSnapshot in snapshot.children) {
                     val cliente = clienteSnapshot.getValue(Cliente::class.java)
@@ -96,7 +96,7 @@ class ClienteDAO {
             }
         })
 
-        return listaClientesLiveData
+        return listaClientes
     }
 
     fun atualizarCliente(cliente: Cliente) {
