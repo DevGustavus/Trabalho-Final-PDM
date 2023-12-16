@@ -65,7 +65,8 @@ class ClienteActivity : AppCompatActivity() {
 
             val listView = binding.listViewMostrar
 
-            val lista = dao.obterListaClientes()
+            val listaMutable = dao.obterListaClientes()
+
 
             //val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista)
 
@@ -78,6 +79,29 @@ class ClienteActivity : AppCompatActivity() {
         }
 
         binding.btn3.setOnClickListener(){
+            binding.popUp.visibility = View.VISIBLE
+            binding.layoutDeletar.visibility = View.VISIBLE
+
+            listaSpinner(1)
+
+            binding.btnDeletar.setOnClickListener(){
+
+                binding.layoutDeletar.visibility = View.GONE
+
+                val cliente = binding.spinnerDeletar.selectedItem
+
+                try {
+                    //dao.excluirCliente(cliente.id)
+                    messagePopUp("Cliente excluído!")
+                }catch (e: Exception){
+                    messagePopUp("Erro ao deletar.\n"+e.message)
+                }
+            }
+
+            binding.btnCancelarDeletar.setOnClickListener(){
+                binding.layoutDeletar.visibility = View.GONE
+                messagePopUp("Exclusão Cancelada!")
+            }
 
         }
 
@@ -103,6 +127,27 @@ class ClienteActivity : AppCompatActivity() {
         binding.nomeInserir.text.clear()
         binding.telefoneInserir.text.clear()
         binding.enderecoInserir.text.clear()
+    }
+
+    private fun listaSpinner(i: Int){
+
+        val dao = ClienteDAO()
+
+        //i = 1 -> deletar
+        if (i == 1){
+            val lista = dao.obterListaClientes()
+
+            //val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, lista)
+
+            //adapter.setDropDownViewResource(R.layout.spinner_item_layout)
+
+            //binding.spinnerDeletar.adapter = adapter
+        }
+
+        //i = 2 -> alterar
+        if (i == 2){
+
+        }
     }
 
 }
