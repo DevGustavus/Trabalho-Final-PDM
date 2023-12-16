@@ -2,6 +2,7 @@ package com.example.trabalhofinalpdm.telas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import com.example.trabalhofinalpdm.DAO.ClienteDAO
@@ -65,12 +66,13 @@ class ClienteActivity : AppCompatActivity() {
 
             val listView = binding.listViewMostrar
 
-            val listaMutable = dao.obterListaClientes()
+            val lista = dao.obterListaClientes()
 
+            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista)
 
-            //val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista)
+            Log.i("lista", lista.toString())
 
-//            listView.adapter = adapter
+            listView.adapter = adapter
 
             binding.btnBackLista.setOnClickListener() {
                 binding.layoutListar.visibility = View.GONE
@@ -137,11 +139,13 @@ class ClienteActivity : AppCompatActivity() {
         if (i == 1){
             val lista = dao.obterListaClientes()
 
-            //val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, lista)
+            val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, lista)
 
-            //adapter.setDropDownViewResource(R.layout.spinner_item_layout)
+            adapter.setDropDownViewResource(R.layout.spinner_item_layout)
 
-            //binding.spinnerDeletar.adapter = adapter
+            Log.i("lista", lista.toString())
+
+            binding.spinnerDeletar.adapter = adapter
         }
 
         //i = 2 -> alterar
