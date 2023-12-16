@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import com.example.trabalhofinalpdm.DAO.ClienteDAO
 import com.example.trabalhofinalpdm.R
+import com.example.trabalhofinalpdm.classes.Cliente
 import com.example.trabalhofinalpdm.databinding.ActivityClienteBinding
 
 class ClienteActivity : AppCompatActivity() {
@@ -27,9 +28,26 @@ class ClienteActivity : AppCompatActivity() {
 
             binding.btnInserir.setOnClickListener(){
                 binding.layoutInserir.visibility = View.GONE
-                limparCamposInserir()
-                messagePopUp("Inserido com sucesso!")
 
+                val cpf = binding.cpfInserir.text.toString()
+                val nome = binding.nomeInserir.text.toString()
+                val telefone = binding.telefoneInserir.text.toString()
+                val endereco = binding.enderecoInserir.text.toString()
+
+                if (cpf == "" || nome == "" || telefone == "" || endereco == ""){
+                    limparCamposInserir()
+                    messagePopUp("Preencha todos os campos!")
+                    binding.popUp.postDelayed({binding.btn1.performClick()},1500)
+                }else {
+                    try {
+                        dao.inserirCliente(Cliente(null, cpf, nome, telefone, endereco))
+                        limparCamposInserir()
+                        messagePopUp("Inserido com sucesso!")
+                    }catch (e: Exception){
+                        limparCamposInserir()
+                        messagePopUp("Erro ao inserir.\n"+e.message)
+                    }
+                }
             }
 
             binding.btnCancelarInserir.setOnClickListener(){
