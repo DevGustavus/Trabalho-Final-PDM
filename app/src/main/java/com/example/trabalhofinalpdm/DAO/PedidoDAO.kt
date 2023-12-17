@@ -2,12 +2,14 @@ package com.example.trabalhofinalpdm.DAO
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.trabalhofinalpdm.classes.Cliente
 import com.example.trabalhofinalpdm.classes.Pedido
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
 
 class PedidoDAO {
 
@@ -49,26 +51,33 @@ class PedidoDAO {
             }
     }
 
-    fun mostrarPedidosLog() {
-        referencia.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val listaPedidos = mutableListOf<Pedido>()
-
-                for (pedidoSnapshot in snapshot.children) {
-                    val pedido = pedidoSnapshot.getValue(Pedido::class.java)
-                    pedido?.let {
-                        listaPedidos.add(it)
+    fun mostrarPedidos(){
+        //Apresentação dos elementos.
+        val listaPedidos = ArrayList<Pedido>()
+        referencia.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                if (snapshot.exists())
+                {
+                    var gson = Gson()
+                    for (i in snapshot.children)
+                    {
+                        val json = gson.toJson(i.value)
+                        val pedido = gson.fromJson(json, Pedido::class.java)
+                        Log.i("Teste", "-------------------")
+                        Log.i("Teste", "Id: ${pedido.id}")
+                        Log.i("Teste", "Cliente: ${pedido.cliente}")
+                        Log.i("Teste", "Data: ${pedido.data}")
+                        Log.i("Teste", "Itens Pedido: ${pedido.itensPedido}")
+                        Log.i("Teste", "-------------------")
+                        listaPedidos.add(Pedido(pedido.id,pedido.cliente,pedido.data,pedido.itensPedido))
                     }
-                }
-
-                Log.d("PedidoDAO", "Lista de Pedidos:")
-                for (pedido in listaPedidos) {
-                    Log.d("PedidoDAO", "ID: ${pedido.id}, Cliente: ${pedido.cliente.nome}, Data: ${pedido.data}")
+                    Log.i("Teste", "Array: ${listaPedidos}")
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-                Log.e("PedidoDAO", "Erro ao ler pedidos do Firebase", error.toException())
+                Log.i("MENSAGEM", "Erro: $error")
             }
         })
     }
@@ -103,6 +112,7 @@ class PedidoDAO {
         // Verifica se o pedido tem um ID válido
         val pedidoId = pedido.id ?: return
 
+        /*
         // Cria um mapa com os dados do pedido que serão atualizados
         val atualizacaoPedido = mapOf(
             "cliente" to mapOf(
@@ -112,6 +122,13 @@ class PedidoDAO {
                 "telefone" to pedido.cliente.telefone,
                 "endereco" to pedido.cliente.endereco
             ),
+            "data" to pedido.data,
+            "itensPedido" to pedido.itensPedido
+        )
+        */
+
+        val atualizacaoPedido = mapOf(
+            "cliente" to pedido.id,
             "data" to pedido.data,
             "itensPedido" to pedido.itensPedido
         )
