@@ -9,6 +9,7 @@ import com.example.trabalhofinalpdm.DAO.ClienteDAO
 import com.example.trabalhofinalpdm.R
 import com.example.trabalhofinalpdm.classes.Cliente
 import com.example.trabalhofinalpdm.databinding.ActivityClienteBinding
+import kotlin.math.log
 
 class ClienteActivity : AppCompatActivity() {
 
@@ -23,7 +24,10 @@ class ClienteActivity : AppCompatActivity() {
 
         window.statusBarColor = getColor(R.color.black)
 
+        var lista = dao.obterListaClientes()
+
         binding.btn1.setOnClickListener(){
+            binding.layoutButtons.visibility = View.GONE
             binding.popUp.visibility = View.VISIBLE
             binding.layoutInserir.visibility = View.VISIBLE
 
@@ -61,14 +65,15 @@ class ClienteActivity : AppCompatActivity() {
         }
 
         binding.btn2.setOnClickListener(){
+            binding.layoutButtons.visibility = View.GONE
             binding.popUp.visibility = View.VISIBLE
             binding.layoutListar.visibility = View.VISIBLE
 
             val listView = binding.listViewMostrar
 
-            val lista = dao.obterListaClientes()
-
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista)
+
+            adapter.notifyDataSetChanged()
 
             Log.i("lista", lista.toString())
 
@@ -77,27 +82,35 @@ class ClienteActivity : AppCompatActivity() {
             binding.btnBackLista.setOnClickListener() {
                 binding.layoutListar.visibility = View.GONE
                 binding.popUp.visibility = View.GONE
+                binding.layoutButtons.visibility = View.VISIBLE
             }
         }
 
         binding.btn3.setOnClickListener(){
+            binding.layoutButtons.visibility = View.GONE
             binding.popUp.visibility = View.VISIBLE
             binding.layoutDeletar.visibility = View.VISIBLE
 
-            listaSpinner(1)
+            listaSpinner(1, lista)
 
             binding.btnDeletar.setOnClickListener(){
 
                 binding.layoutDeletar.visibility = View.GONE
 
-                val cliente = binding.spinnerDeletar.selectedItem
+                val pos = binding.spinnerAlterar.selectedItemPosition
+
+                val cliente = lista[Math.abs(pos)]
 
                 try {
-                    //dao.excluirCliente(cliente.id)
+                    dao.excluirCliente(cliente.id!!)
                     messagePopUp("Cliente excluído!")
                 }catch (e: Exception){
                     messagePopUp("Erro ao deletar.\n"+e.message)
+
                 }
+
+                lista = dao.obterListaClientes()
+
             }
 
             binding.btnCancelarDeletar.setOnClickListener(){
@@ -108,6 +121,68 @@ class ClienteActivity : AppCompatActivity() {
         }
 
         binding.btn4.setOnClickListener(){
+            binding.layoutButtons.visibility = View.GONE
+            binding.popUp.visibility = View.VISIBLE
+            binding.layoutAlterar.visibility = View.VISIBLE
+
+            listaSpinner(2, lista)
+
+            binding.btnAlterar.setOnClickListener(){
+                binding.layoutAlterar.visibility = View.GONE
+                binding.layoutAlterar2.visibility = View.VISIBLE
+
+                val pos = binding.spinnerAlterar.selectedItemPosition
+
+                Log.i("alterar", pos.toString())
+
+                Log.i("alterar", lista.toString())
+
+                val cliente = lista[Math.abs(pos)]
+
+                Log.i("alterar", cliente.nome)
+
+                preencherCamposAlterar(cliente)
+
+                val cpf = binding.cpfAlterar.text.toString()
+                val nome = binding.nomeAlterar.text.toString()
+                val telefone = binding.telefoneAlterar.text.toString()
+                val endereco = binding.enderecoAlterar.text.toString()
+
+
+                binding.btnAlterar2.setOnClickListener(){
+
+                    binding.layoutAlterar2.visibility = View.GONE
+
+                    if (cpf == "" || nome == "" || telefone == "" || endereco == ""){
+                        limparCamposAlterar()
+                        messagePopUp("Preencha todos os campos!")
+                    }else {
+                        try {
+                            dao.atualizarCliente(cliente)
+                            messagePopUp("Cliente Alterado!")
+                        }catch (e: Exception){
+                            messagePopUp("Erro ao alterar.\n"+e.message)
+                        }
+
+                        lista = dao.obterListaClientes()
+
+                    }
+                }
+
+                binding.btnCancelarAlterar2.setOnClickListener(){
+                    binding.layoutAlterar2.visibility = View.GONE
+                    limparCamposAlterar()
+                    messagePopUp("Operação cancelada!")
+                    binding.popUp.postDelayed({binding.btn4.performClick()},1500)
+                }
+
+
+            }
+
+            binding.btnCancelarAlterar.setOnClickListener(){
+                binding.layoutAlterar.visibility = View.GONE
+                messagePopUp("Alteração cancelada!")
+            }
 
         }
 
@@ -122,6 +197,7 @@ class ClienteActivity : AppCompatActivity() {
         binding.popUp.postDelayed({binding.message.visibility = View.GONE}, 1500)
         binding.popUp.postDelayed({binding.textMessage.text = ""}, 1500)
         binding.popUp.postDelayed({binding.popUp.visibility = View.GONE}, 1500)
+        binding.layoutButtons.visibility = View.VISIBLE
     }
 
     private fun limparCamposInserir(){
@@ -131,13 +207,12 @@ class ClienteActivity : AppCompatActivity() {
         binding.enderecoInserir.text.clear()
     }
 
-    private fun listaSpinner(i: Int){
+    private fun listaSpinner(i: Int, lista: ArrayList<Cliente>){
 
         val dao = ClienteDAO()
 
         //i = 1 -> deletar
         if (i == 1){
-            val lista = dao.obterListaClientes()
 
             val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, lista)
 
@@ -151,7 +226,28 @@ class ClienteActivity : AppCompatActivity() {
         //i = 2 -> alterar
         if (i == 2){
 
+            val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, lista)
+
+            adapter.setDropDownViewResource(R.layout.spinner_item_layout)
+
+            Log.i("lista", lista.toString())
+
+            binding.spinnerAlterar.adapter = adapter
         }
+    }
+
+    private fun limparCamposAlterar(){
+        binding.cpfAlterar.text.clear()
+        binding.nomeAlterar.text.clear()
+        binding.telefoneAlterar.text.clear()
+        binding.enderecoAlterar.text.clear()
+    }
+
+    private fun preencherCamposAlterar(cliente: Cliente){
+        binding.cpfAlterar.setText(cliente.cpf)
+        binding.nomeAlterar.setText(cliente.nome)
+        binding.telefoneAlterar.setText(cliente.telefone)
+        binding.enderecoAlterar.setText(cliente.endereco)
     }
 
 }

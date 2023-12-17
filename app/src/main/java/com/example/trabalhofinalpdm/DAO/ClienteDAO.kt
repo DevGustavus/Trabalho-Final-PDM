@@ -82,29 +82,36 @@ class ClienteDAO {
         })
     }
 
-    fun obterListaClientes(): MutableList<Cliente> {
-        val listaClientesLiveData = MutableLiveData<List<Cliente>>()
-        val listaClientes = mutableListOf<Cliente>()
-
-        referencia.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                for (clienteSnapshot in snapshot.children) {
-                    val cliente = clienteSnapshot.getValue(Cliente::class.java)
-                    cliente?.let {
-                        listaClientes.add(it)
+    fun obterListaClientes(): ArrayList<Cliente> {
+        //Apresentação dos elementos.
+        val listaClientes = ArrayList<Cliente>()
+        referencia.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                if (snapshot.exists())
+                {
+                    var gson = Gson()
+                    for (i in snapshot.children)
+                    {
+                        val json = gson.toJson(i.value)
+                        val cliente = gson.fromJson(json, Cliente::class.java)
+                        Log.i("Teste", "-------------------")
+                        Log.i("Teste", "Id: ${cliente.id}")
+                        Log.i("Teste", "CPF: ${cliente.cpf}")
+                        Log.i("Teste", "Nome: ${cliente.nome}")
+                        Log.i("Teste", "Telefone: ${cliente.telefone}")
+                        Log.i("Teste", "Endereco: ${cliente.endereco}")
+                        Log.i("Teste", "-------------------")
+                        listaClientes.add(Cliente(cliente.id,cliente.cpf,cliente.nome,cliente.telefone,cliente.endereco))
                     }
+                    Log.i("Teste", "Array: ${listaClientes}")
                 }
-
-                // Atualiza o LiveData com a lista de clientes
-                listaClientesLiveData.value = listaClientes
             }
-
             override fun onCancelled(error: DatabaseError) {
-                // Se ocorrer um erro, você pode lidar com isso aqui
+                Log.i("MENSAGEM", "Erro: $error")
             }
         })
-
         return listaClientes
     }
 
