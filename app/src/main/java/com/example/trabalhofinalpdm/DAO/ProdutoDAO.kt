@@ -19,30 +19,34 @@ class ProdutoDAO {
         // Gera um novo ID automático usando push()
         val novoId = referencia.push().key
 
+        /*
         // Converte o ID de String para Int (se possível)
         val idInt = novoId?.toIntOrNull()
+        */
 
         // Define o ID gerado para o produto
-        produto.id = idInt
+        produto.id = novoId
 
         // Insere o produto no banco de dados
         novoId?.let {
             referencia.child(it).setValue(produto)
                 .addOnSuccessListener {
-                    Log.d("ProdutoDAO", "Produto inserido com sucesso. ID: $idInt")
+                    Log.d("ProdutoDAO", "Produto inserido com sucesso. ID: $novoId")
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("ProdutoDAO", "Erro ao inserir produto. ID: $idInt", exception)
+                    Log.e("ProdutoDAO", "Erro ao inserir produto. ID: $novoId", exception)
                 }
         }
     }
 
-    fun excluirProduto(idProduto: Int) {
+    fun excluirProduto(idProduto: String) {
+        /*
         // Converte o ID para String
         val idString = idProduto.toString()
+        */
 
         // Remove o produto do banco de dados
-        referencia.child(idString).removeValue()
+        referencia.child(idProduto).removeValue()
             .addOnSuccessListener {
                 Log.d("ProdutoDAO", "Produto removido com sucesso. ID: $idProduto")
             }

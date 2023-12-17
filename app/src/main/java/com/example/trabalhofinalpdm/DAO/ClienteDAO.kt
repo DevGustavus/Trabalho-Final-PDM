@@ -18,30 +18,34 @@ class ClienteDAO {
         // Gera um novo ID automático usando push()
         val novoId = referencia.push().key
 
+        /*
         // Converte o ID de String para Int (se possível)
         val idInt = novoId?.toIntOrNull()
+        */
 
         // Define o ID gerado para o cliente
-        cliente.id = idInt
+        cliente.id = novoId
 
         // Insere o cliente no banco de dados
         novoId?.let {
             referencia.child(it).setValue(cliente)
                 .addOnSuccessListener {
-                    Log.d("ClienteDAO", "Cliente inserido com sucesso. ID: $idInt")
+                    Log.d("ClienteDAO", "Cliente inserido com sucesso. ID: $novoId")
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("ClienteDAO", "Erro ao inserir cliente. ID: $idInt", exception)
+                    Log.e("ClienteDAO", "Erro ao inserir cliente. ID: $novoId", exception)
                 }
         }
     }
 
-    fun excluirCliente(idCliente: Int) {
+    fun excluirCliente(idCliente: String) {
+        /*
         // Converte o ID para String
         val idString = idCliente.toString()
+        */
 
         // Remove o cliente do banco de dados
-        referencia.child(idString).removeValue()
+        referencia.child(idCliente).removeValue()
             .addOnSuccessListener {
                 Log.d("ClienteDAO", "Cliente removido com sucesso. ID: $idCliente")
             }
