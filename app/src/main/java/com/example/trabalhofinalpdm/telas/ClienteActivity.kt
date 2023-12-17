@@ -99,7 +99,8 @@ class ClienteActivity : AppCompatActivity() {
 
                 val pos = binding.spinnerAlterar.selectedItemPosition
 
-                val cliente = lista[Math.abs(pos)]
+                val cliente = lista[Math.abs(pos)] // TA PEGANDO VALOR NULL!!!!!
+                Log.e("TESTE TESTE TESTE","${cliente.id}")
 
                 try {
                     dao.excluirCliente(cliente.id!!)

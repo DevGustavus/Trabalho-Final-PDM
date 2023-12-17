@@ -19,30 +19,34 @@ class PedidoDAO {
         // Gera um novo ID automático usando push()
         val novoId = referencia.push().key
 
+        /*
         // Converte o ID de String para Int (se possível)
         val idInt = novoId?.toIntOrNull()
+        */
 
         // Define o ID gerado para o pedido
-        pedido.id = idInt
+        pedido.id = novoId
 
         // Insere o pedido no banco de dados
         novoId?.let {
             referencia.child(it).setValue(pedido)
                 .addOnSuccessListener {
-                    Log.d("PedidoDAO", "Pedido inserido com sucesso. ID: $idInt")
+                    Log.d("PedidoDAO", "Pedido inserido com sucesso. ID: $novoId")
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("PedidoDAO", "Erro ao inserir pedido. ID: $idInt", exception)
+                    Log.e("PedidoDAO", "Erro ao inserir pedido. ID: $novoId", exception)
                 }
         }
     }
 
-    fun excluirPedido(idPedido: Int) {
+    fun excluirPedido(idPedido: String) {
+        /*
         // Converte o ID para String
         val idString = idPedido.toString()
+        */
 
         // Remove o pedido do banco de dados
-        referencia.child(idString).removeValue()
+        referencia.child(idPedido).removeValue()
             .addOnSuccessListener {
                 Log.d("PedidoDAO", "Pedido removido com sucesso. ID: $idPedido")
             }

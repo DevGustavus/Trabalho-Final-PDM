@@ -1,7 +1,7 @@
 package com.example.trabalhofinalpdm.classes
 
 data class Cliente(
-    var id: Int? = null,
+    var id: String? = null,
     var cpf: String,
     var nome: String,
     var telefone: String,
