@@ -158,6 +158,10 @@ class ClienteActivity : AppCompatActivity() {
                         messagePopUp("Preencha todos os campos!")
                     }else {
                         try {
+                            cliente.cpf = cpf
+                            cliente.nome = nome
+                            cliente.telefone = telefone
+                            cliente.endereco = endereco
                             dao.atualizarCliente(cliente)
                             messagePopUp("Cliente Alterado!")
                         }catch (e: Exception){

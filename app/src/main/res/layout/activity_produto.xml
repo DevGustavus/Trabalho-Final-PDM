@@ -23,6 +23,7 @@
         android:text="Produtos"/>
 
     <LinearLayout
+        android:id="@+id/layoutButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -37,7 +38,8 @@
 
             <ImageView
                 android:layout_width="50dp"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp"
+                android:src="@drawable/icon_add_produto"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +57,8 @@
 
             <ImageView
                 android:layout_width="50dp"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp"
+                android:src="@drawable/icon_listar_produto"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,7 +76,8 @@
 
             <ImageView
                 android:layout_width="50dp"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp"
+                android:src="@drawable/icon_delete_produto"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -91,7 +95,8 @@
 
             <ImageView
                 android:layout_width="50dp"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp"
+                android:src="@drawable/icon_edit_produto"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,6 +106,346 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/btn5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/layoutBtn">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voltar"
+                style="@style/textBtnMenu"/>
+
+        </LinearLayout>
+
     </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/popUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/layoutPopUp">
+
+        <LinearLayout
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/textBtnMenu"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layoutInserir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="center"
+                android:text="Inserir Produto"/>
+
+
+            <EditText
+                android:id="@+id/descricaoInserir"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="Descrição"
+                android:textColorHint="@color/white"
+                android:layout_marginBottom="20dp"
+                android:inputType="text"/>
+
+            <EditText
+                android:id="@+id/valorInserir"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="Valor"
+                android:textColorHint="@color/white"
+                android:layout_marginBottom="20dp"
+                android:inputType="numberDecimal"/>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnInserir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Inserir"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+                <TextView
+                    android:id="@+id/btnCancelarInserir"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutListar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="center"
+                android:text="Listar Produtos"/>
+
+
+            <ListView
+                android:id="@+id/listViewMostrar"
+                android:layout_width="275dp"
+                android:layout_marginTop="20dp"
+                android:padding="20dp"
+                android:layout_height="450dp" />
+
+            <TextView
+                android:id="@+id/btnBackLista"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Voltar"
+                android:background="@drawable/button_background"
+                style="@style/textBtnMenu"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutDeletar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="center"
+                android:text="Deletar Produtos"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:layout_marginBottom="20dp"
+                android:text="Selecione o produto:"/>
+
+            <Spinner
+                android:id="@+id/spinnerDeletar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnDeletar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Deletar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+                <TextView
+                    android:id="@+id/btnCancelarDeletar"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutAlterar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="center"
+                android:text="Alterar Clientes"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:layout_marginBottom="20dp"
+                android:text="Selecione o produto:"/>
+
+            <Spinner
+                android:id="@+id/spinnerAlterar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnAlterar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selecionar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+                <TextView
+                    android:id="@+id/btnCancelarAlterar"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutAlterar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="center"
+                android:text="Alterar Produto"/>
+
+
+            <EditText
+                android:id="@+id/descricaoAlterar"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="Descrição"
+                android:textColorHint="@color/white"
+                android:layout_marginBottom="20dp"
+                android:inputType="text"/>
+
+            <EditText
+                android:id="@+id/valorAlterar"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:hint="Valor"
+                android:textColorHint="@color/white"
+                android:layout_marginBottom="20dp"
+                android:inputType="numberDecimal"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnAlterar2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alterar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+                <TextView
+                    android:id="@+id/btnCancelarAlterar2"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelar"
+                    android:background="@drawable/button_background"
+                    style="@style/textBtnMenu"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <!-- fim layout popup -->
 
 </RelativeLayout>

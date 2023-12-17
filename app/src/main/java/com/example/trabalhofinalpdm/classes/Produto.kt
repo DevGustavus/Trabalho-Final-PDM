@@ -4,4 +4,8 @@ data class Produto(
     var id: Int? = null,
     var descricao: String,
     var valor: Float
-)
+){
+    override fun toString(): String {
+        return "$descricao"
+    }
+}

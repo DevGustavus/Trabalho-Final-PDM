@@ -81,30 +81,36 @@ class ProdutoDAO {
         })
     }
 
-    fun obterListaProdutos(): MutableLiveData<List<Produto>> {
-        val listaProdutosLiveData = MutableLiveData<List<Produto>>()
-
-        referencia.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val listaProdutos = mutableListOf<Produto>()
-
-                for (produtoSnapshot in snapshot.children) {
-                    val produto = produtoSnapshot.getValue(Produto::class.java)
-                    produto?.let {
-                        listaProdutos.add(it)
+    fun obterListaProdutos(): ArrayList<Produto> {
+        //Apresentação dos elementos.
+        val listaProdutos = ArrayList<Produto>()
+        referencia.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                if (snapshot.exists())
+                {
+                    var gson = Gson()
+                    for (i in snapshot.children)
+                    {
+                        val json = gson.toJson(i.value)
+                        val produto = gson.fromJson(json, Produto::class.java)
+                        Log.i("Teste", "-------------------")
+                        Log.i("Teste", "Id: ${produto.id}")
+                        Log.i("Teste", "Descricao: ${produto.descricao}")
+                        Log.i("Teste", "Valor: ${produto.valor}")
+                        Log.i("Teste", "-------------------")
+                        listaProdutos.add(Produto(produto.id,produto.descricao,produto.valor))
                     }
+                    Log.i("Teste", "Array: ${listaProdutos}")
                 }
-
-                // Atualiza o LiveData com a lista de produtos
-                listaProdutosLiveData.value = listaProdutos
             }
-
             override fun onCancelled(error: DatabaseError) {
-                // Se ocorrer um erro, você pode lidar com isso aqui
+                Log.i("MENSAGEM", "Erro: $error")
             }
         })
 
-        return listaProdutosLiveData
+        return listaProdutos
     }
 
     fun atualizarProduto(produto: Produto) {
