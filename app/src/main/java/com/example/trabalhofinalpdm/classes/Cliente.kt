@@ -8,6 +8,6 @@ data class Cliente(
     var endereco: String
 ){
     override fun toString(): String {
-        return "$nome"
+        return "$id - $nome"
     }
 }

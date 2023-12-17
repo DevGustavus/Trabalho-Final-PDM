@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.trabalhofinalpdm.DAO.ClienteDAO
 import com.example.trabalhofinalpdm.DAO.ProdutoDAO
@@ -16,10 +17,37 @@ class ProdutoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProdutoBinding
 
+    private var pos: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProdutoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.spinnerDeletar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Agora você pode acessar a posição sem problemas
+                Log.d("Spinner", "Posição selecionada: $position")
+                pos = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Tratamento quando nada é selecionado
+            }
+        }
+
+        binding.spinnerAlterar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Agora você pode acessar a posição sem problemas
+                Log.d("Spinner", "Posição selecionada: $position")
+                pos = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Tratamento quando nada é selecionado
+            }
+        }
+
 
         val dao = ProdutoDAO()
 
@@ -96,13 +124,11 @@ class ProdutoActivity : AppCompatActivity() {
 
                 binding.layoutDeletar.visibility = View.GONE
 
-                val pos = binding.spinnerAlterar.selectedItemPosition
-
                 val produto = lista[Math.abs(pos)]
 
                 try {
                     dao.excluirProduto(produto.id!!)
-                    messagePopUp("Cliente excluído!")
+                    messagePopUp("Produto excluído!")
                 }catch (e: Exception){
                     messagePopUp("Erro ao deletar.\n"+e.message)
 
@@ -130,15 +156,7 @@ class ProdutoActivity : AppCompatActivity() {
                 binding.layoutAlterar.visibility = View.GONE
                 binding.layoutAlterar2.visibility = View.VISIBLE
 
-                val pos = binding.spinnerAlterar.selectedItemPosition
-
-                Log.i("alterar", pos.toString())
-
-                Log.i("alterar", lista.toString())
-
                 val produto = lista[Math.abs(pos)]
-
-                Log.i("alterar", produto.descricao)
 
                 preencherCamposAlterar(produto)
 
@@ -158,7 +176,7 @@ class ProdutoActivity : AppCompatActivity() {
                             produto.descricao = descricao
                             produto.valor = valor
                             dao.atualizarProduto(produto)
-                            messagePopUp("Cliente Alterado!")
+                            messagePopUp("Produto Alterado!")
                         }catch (e: Exception){
                             messagePopUp("Erro ao alterar.\n"+e.message)
                         }

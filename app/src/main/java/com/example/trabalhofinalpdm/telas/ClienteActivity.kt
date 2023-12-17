@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.trabalhofinalpdm.DAO.ClienteDAO
 import com.example.trabalhofinalpdm.R
@@ -15,10 +16,36 @@ class ClienteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityClienteBinding
 
+    var pos: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityClienteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.spinnerDeletar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Agora você pode acessar a posição sem problemas
+                Log.d("Spinner", "Posição selecionada: $position")
+                pos = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Tratamento quando nada é selecionado
+            }
+        }
+
+        binding.spinnerAlterar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Agora você pode acessar a posição sem problemas
+                Log.d("Spinner", "Posição selecionada: $position")
+                pos = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Tratamento quando nada é selecionado
+            }
+        }
 
         val dao = ClienteDAO()
 
@@ -93,14 +120,13 @@ class ClienteActivity : AppCompatActivity() {
 
             listaSpinner(1, lista)
 
+            Log.i("TESTEEE", lista.toString())
+
             binding.btnDeletar.setOnClickListener(){
 
                 binding.layoutDeletar.visibility = View.GONE
 
-                val pos = binding.spinnerAlterar.selectedItemPosition
-
-                val cliente = lista[Math.abs(pos)] // TA PEGANDO VALOR NULL!!!!!
-                Log.e("TESTE TESTE TESTE","${cliente.id}")
+                val cliente = lista[Math.abs(pos)]
 
                 try {
                     dao.excluirCliente(cliente.id!!)
@@ -132,15 +158,7 @@ class ClienteActivity : AppCompatActivity() {
                 binding.layoutAlterar.visibility = View.GONE
                 binding.layoutAlterar2.visibility = View.VISIBLE
 
-                val pos = binding.spinnerAlterar.selectedItemPosition
-
-                Log.i("alterar", pos.toString())
-
-                Log.i("alterar", lista.toString())
-
                 val cliente = lista[Math.abs(pos)]
-
-                Log.i("alterar", cliente.nome)
 
                 preencherCamposAlterar(cliente)
 
@@ -216,6 +234,8 @@ class ClienteActivity : AppCompatActivity() {
 
         val dao = ClienteDAO()
 
+
+
         //i = 1 -> deletar
         if (i == 1){
 
@@ -223,9 +243,13 @@ class ClienteActivity : AppCompatActivity() {
 
             adapter.setDropDownViewResource(R.layout.spinner_item_layout)
 
+            adapter.notifyDataSetChanged()
+
             Log.i("lista", lista.toString())
 
             binding.spinnerDeletar.adapter = adapter
+            adapter.notifyDataSetChanged()
+
         }
 
         //i = 2 -> alterar
@@ -235,9 +259,12 @@ class ClienteActivity : AppCompatActivity() {
 
             adapter.setDropDownViewResource(R.layout.spinner_item_layout)
 
+            adapter.notifyDataSetChanged()
+
             Log.i("lista", lista.toString())
 
             binding.spinnerAlterar.adapter = adapter
+            adapter.notifyDataSetChanged()
         }
     }
 
