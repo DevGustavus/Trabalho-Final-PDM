@@ -2,12 +2,14 @@ package com.example.trabalhofinalpdm.DAO
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.trabalhofinalpdm.classes.Pedido
 import com.example.trabalhofinalpdm.classes.Produto
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
 
 class ProdutoDAO {
 
@@ -49,26 +51,32 @@ class ProdutoDAO {
             }
     }
 
-    fun mostrarProdutosLog() {
-        referencia.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val listaProdutos = mutableListOf<Produto>()
-
-                for (produtoSnapshot in snapshot.children) {
-                    val produto = produtoSnapshot.getValue(Produto::class.java)
-                    produto?.let {
-                        listaProdutos.add(it)
+    fun mostrarProdutos(){
+        //Apresentação dos elementos.
+        val listaProdutos = ArrayList<Produto>()
+        referencia.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                if (snapshot.exists())
+                {
+                    var gson = Gson()
+                    for (i in snapshot.children)
+                    {
+                        val json = gson.toJson(i.value)
+                        val produto = gson.fromJson(json, Produto::class.java)
+                        Log.i("Teste", "-------------------")
+                        Log.i("Teste", "Id: ${produto.id}")
+                        Log.i("Teste", "Descricao: ${produto.descricao}")
+                        Log.i("Teste", "Valor: ${produto.valor}")
+                        Log.i("Teste", "-------------------")
+                        listaProdutos.add(Produto(produto.id,produto.descricao,produto.valor))
                     }
-                }
-
-                Log.d("ProdutoDAO", "Lista de Produtos:")
-                for (produto in listaProdutos) {
-                    Log.d("ProdutoDAO", "ID: ${produto.id}, Descrição: ${produto.descricao}, Valor: ${produto.valor}")
+                    Log.i("Teste", "Array: ${listaProdutos}")
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-                Log.e("ProdutoDAO", "Erro ao ler produtos do Firebase", error.toException())
+                Log.i("MENSAGEM", "Erro: $error")
             }
         })
     }

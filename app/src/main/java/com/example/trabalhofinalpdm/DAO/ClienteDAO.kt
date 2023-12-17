@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
 
 class ClienteDAO {
 
@@ -49,26 +50,34 @@ class ClienteDAO {
             }
     }
 
-    fun mostrarClientesLog() {
-        referencia.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val listaClientes = mutableListOf<Cliente>()
-
-                for (clienteSnapshot in snapshot.children) {
-                    val cliente = clienteSnapshot.getValue(Cliente::class.java)
-                    cliente?.let {
-                        listaClientes.add(it)
+    fun mostrarClientes(){
+        //Apresentação dos elementos.
+        val listaClientes = ArrayList<Cliente>()
+        referencia.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                if (snapshot.exists())
+                {
+                    var gson = Gson()
+                    for (i in snapshot.children)
+                    {
+                        val json = gson.toJson(i.value)
+                        val cliente = gson.fromJson(json, Cliente::class.java)
+                        Log.i("Teste", "-------------------")
+                        Log.i("Teste", "Id: ${cliente.id}")
+                        Log.i("Teste", "CPF: ${cliente.cpf}")
+                        Log.i("Teste", "Nome: ${cliente.nome}")
+                        Log.i("Teste", "Telefone: ${cliente.telefone}")
+                        Log.i("Teste", "Endereco: ${cliente.endereco}")
+                        Log.i("Teste", "-------------------")
+                        listaClientes.add(Cliente(cliente.id,cliente.cpf,cliente.nome,cliente.telefone,cliente.endereco))
                     }
-                }
-
-                Log.d("ClienteDAO", "Lista de Clientes:")
-                for (cliente in listaClientes) {
-                    Log.d("ClienteDAO", "ID: ${cliente.id}, Nome: ${cliente.nome}, CPF: ${cliente.cpf}")
+                    Log.i("Teste", "Array: ${listaClientes}")
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-                Log.e("ClienteDAO", "Erro ao ler clientes do Firebase", error.toException())
+                Log.i("MENSAGEM", "Erro: $error")
             }
         })
     }
