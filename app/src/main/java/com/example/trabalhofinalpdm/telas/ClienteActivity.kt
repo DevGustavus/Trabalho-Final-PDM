@@ -108,7 +108,7 @@ class ClienteActivity : AppCompatActivity() {
                     messagePopUp("Erro ao deletar.\n"+e.message)
 
                 }
-
+                lista.clear()
                 lista = dao.obterListaClientes()
 
             }
@@ -167,7 +167,7 @@ class ClienteActivity : AppCompatActivity() {
                         }catch (e: Exception){
                             messagePopUp("Erro ao alterar.\n"+e.message)
                         }
-
+                        lista.clear()
                         lista = dao.obterListaClientes()
 
                     }

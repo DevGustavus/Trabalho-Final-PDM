@@ -84,6 +84,7 @@ class ProdutoDAO {
     fun obterListaProdutos(): ArrayList<Produto> {
         //Apresentação dos elementos.
         val listaProdutos = ArrayList<Produto>()
+        listaProdutos.clear()
         referencia.addValueEventListener(object : ValueEventListener
         {
             override fun onDataChange(snapshot: DataSnapshot)

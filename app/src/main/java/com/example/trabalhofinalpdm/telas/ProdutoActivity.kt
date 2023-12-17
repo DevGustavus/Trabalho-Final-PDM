@@ -107,7 +107,7 @@ class ProdutoActivity : AppCompatActivity() {
                     messagePopUp("Erro ao deletar.\n"+e.message)
 
                 }
-
+                lista.clear()
                 lista = dao.obterListaProdutos()
 
             }
@@ -162,7 +162,7 @@ class ProdutoActivity : AppCompatActivity() {
                         }catch (e: Exception){
                             messagePopUp("Erro ao alterar.\n"+e.message)
                         }
-
+                        lista.clear()
                         lista = dao.obterListaProdutos()
 
                     }
