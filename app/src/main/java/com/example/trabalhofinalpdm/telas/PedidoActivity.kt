@@ -99,6 +99,8 @@ class PedidoActivity : AppCompatActivity() {
             listaCliente = daoCliente.obterListaClientes()
             listaProduto = daoProduto.obterListaProdutos()
 
+            binding.data.text.clear()
+
             binding.adicionarCliente.setOnClickListener(){
                 listarSpinnerInserir(1, listaCliente, listaProduto)
                 binding.spinnerClienteInserir.visibility = View.VISIBLE
@@ -145,7 +147,8 @@ class PedidoActivity : AppCompatActivity() {
                 binding.layoutInserir.visibility = View.GONE
 
                     try {
-                        dao.inserirPedido(Pedido(null, cliente.id, "11/11/2024", produtos, quantidades))
+                        dao.inserirPedido(Pedido(null, cliente.id, binding.data.text.toString(), produtos, quantidades))
+                        binding.data.text.clear()
                         limparCamposInserir()
                         messagePopUp("Inserido com sucesso!")
                         listaCliente.clear()
