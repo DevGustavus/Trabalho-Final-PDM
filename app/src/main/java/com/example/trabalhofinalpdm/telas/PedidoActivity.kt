@@ -24,15 +24,38 @@ class PedidoActivity : AppCompatActivity() {
 
     private lateinit var cliente: Cliente
     private lateinit var produto: Produto
-    private lateinit var pedido: Pedido
     private var quantidade: Int = 0
-    private lateinit var produtos: ArrayList<Produto>
-    private lateinit var quantidades: ArrayList<Int>
+    private var produtos: ArrayList<Produto> = ArrayList<Produto>()
+    private var quantidades: ArrayList<Int> = ArrayList<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPedidoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.spinnerClienteInserir.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Agora você pode acessar a posição sem problemas
+                Log.d("Spinner", "Posição selecionada: $position")
+                pos = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Tratamento quando nada é selecionado
+            }
+        }
+
+        binding.spinnerProdutoInserir.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Agora você pode acessar a posição sem problemas
+                Log.d("Spinner", "Posição selecionada: $position")
+                pos = position
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Tratamento quando nada é selecionado
+            }
+        }
 
         binding.spinnerDeletar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -73,7 +96,11 @@ class PedidoActivity : AppCompatActivity() {
             binding.popUp.visibility = View.VISIBLE
             binding.layoutInserir.visibility = View.VISIBLE
 
+            listaCliente = daoCliente.obterListaClientes()
+            listaProduto = daoProduto.obterListaProdutos()
+
             binding.adicionarCliente.setOnClickListener(){
+                listarSpinnerInserir(1, listaCliente, listaProduto)
                 binding.spinnerClienteInserir.visibility = View.VISIBLE
                 binding.adicionarCliente2.visibility = View.VISIBLE
                 binding.adicionarCliente.visibility = View.GONE
@@ -88,25 +115,26 @@ class PedidoActivity : AppCompatActivity() {
             }
 
             binding.adicionarProduto.setOnClickListener(){
+                listarSpinnerInserir(2, listaCliente, listaProduto)
                 binding.spinnerProdutoInserir.visibility = View.VISIBLE
                 binding.quantidadeProduto.visibility = View.VISIBLE
-                binding.adicionarCliente2.visibility = View.VISIBLE
+                binding.adicionarProduto2.visibility = View.VISIBLE
                 binding.adicionarProduto.visibility = View.GONE
 
                 binding.adicionarProduto2.setOnClickListener(){
                     produto = listaProduto[Math.abs(pos)]
+                    Log.i("pos", pos.toString())
                     produtos.add(produto)
                     val listView = binding.produtos
 
                     val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, produtos)
 
-                    adapter.notifyDataSetChanged()
-
                     listView.adapter = adapter
                     binding.produtos.visibility = View.VISIBLE
-                    binding.spinnerClienteInserir.visibility = View.GONE
+                    binding.spinnerProdutoInserir.visibility = View.GONE
                     quantidade = binding.quantidadeProduto.text.toString().toInt()
                     quantidades.add(quantidade)
+                    binding.quantidadeProduto.text.clear()
                     binding.quantidadeProduto.visibility = View.GONE
                     binding.adicionarProduto2.visibility = View.GONE
                     binding.adicionarProduto.visibility = View.VISIBLE
@@ -120,17 +148,55 @@ class PedidoActivity : AppCompatActivity() {
                         dao.inserirPedido(Pedido(null, cliente.id, "11/11/2024", produtos, quantidades))
                         limparCamposInserir()
                         messagePopUp("Inserido com sucesso!")
+                        listaCliente.clear()
+                        listaProduto.clear()
+                        lista.clear()
+                        lista = dao.obterListaPedidos()
+                        binding.produtos.visibility = View.GONE
+                        binding.cliente.visibility = View.GONE
+                        binding.adicionarCliente.visibility = View.VISIBLE
+                        produtos.clear()
+                        val listView = binding.produtos
+
+                        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, produtos)
+
+                        listView.adapter = adapter
                     }catch (e: Exception){
                         limparCamposInserir()
                         messagePopUp("Erro ao inserir.\n"+e.message)
+                        binding.produtos.visibility = View.GONE
+                        binding.cliente.visibility = View.GONE
+                        binding.adicionarCliente.visibility = View.VISIBLE
+                        produtos.clear()
+                        val listView = binding.produtos
+
+                        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, produtos)
+
+                        listView.adapter = adapter
                     }
 
             }
 
             binding.btnCancelarInserir.setOnClickListener(){
                 binding.layoutInserir.visibility = View.GONE
+                binding.adicionarCliente.visibility = View.VISIBLE
+                binding.produtos.visibility = View.GONE
+                binding.cliente.text = ""
+                binding.cliente.visibility = View.GONE
+                binding.spinnerClienteInserir.visibility = View.GONE
+                binding.adicionarCliente2.visibility = View.GONE
+                binding.spinnerProdutoInserir.visibility = View.GONE
+                binding.adicionarProduto2.visibility = View.GONE
+                binding.quantidadeProduto.visibility = View.GONE
+                binding.adicionarProduto.visibility = View.VISIBLE
                 messagePopUp("Inserção Cancelada!")
                 limparCamposInserir()
+                produtos.clear()
+                val listView = binding.produtos
+
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, produtos)
+
+                listView.adapter = adapter
 
             }
 
@@ -142,6 +208,8 @@ class PedidoActivity : AppCompatActivity() {
             binding.layoutListar.visibility = View.VISIBLE
 
             val listView = binding.listViewMostrar
+
+
 
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista)
 
@@ -171,18 +239,16 @@ class PedidoActivity : AppCompatActivity() {
 
                 binding.layoutDeletar.visibility = View.GONE
 
-                val cliente = lista[Math.abs(pos)]
+                val pedido = lista[Math.abs(pos)]
 
                 try {
-                    dao.excluirPedido(cliente.id!!)
-                    messagePopUp("Cliente excluído!")
+                    dao.excluirPedido(pedido.id!!)
+                    messagePopUp("Pedido excluído!")
                 }catch (e: Exception){
                     messagePopUp("Erro ao deletar.\n"+e.message)
-
                 }
                 lista.clear()
-                lista = dao.obterListaClientes()
-
+                lista = dao.obterListaPedidos()
             }
 
             binding.btnCancelarDeletar.setOnClickListener(){
@@ -195,23 +261,25 @@ class PedidoActivity : AppCompatActivity() {
         binding.btn4.setOnClickListener(){
             binding.layoutButtons.visibility = View.GONE
             binding.popUp.visibility = View.VISIBLE
-            binding.layoutAlterar.visibility = View.VISIBLE
+            //binding.layoutAlterar.visibility = View.VISIBLE
 
-            listaSpinner(2, lista)
+            //listaSpinner(2, lista)
+
+            messagePopUp("Esta função ainda está em desenvolvimento.")
 
             binding.btnAlterar.setOnClickListener(){
+
                 binding.layoutAlterar.visibility = View.GONE
                 binding.layoutAlterar2.visibility = View.VISIBLE
 
-                val cliente = lista[Math.abs(pos)]
+                val pedido = lista[Math.abs(pos)]
 
-                preencherCamposAlterar(cliente)
+                preencherCamposAlterar(pedido)
 
                 val cpf = binding.cpfAlterar.text.toString()
                 val nome = binding.nomeAlterar.text.toString()
                 val telefone = binding.telefoneAlterar.text.toString()
                 val endereco = binding.enderecoAlterar.text.toString()
-
 
                 binding.btnAlterar2.setOnClickListener(){
 
@@ -226,13 +294,13 @@ class PedidoActivity : AppCompatActivity() {
                             cliente.nome = nome
                             cliente.telefone = telefone
                             cliente.endereco = endereco
-                            dao.atualizarPedido(cliente)
-                            messagePopUp("Cliente Alterado!")
+                            dao.atualizarPedido(pedido)
+                            messagePopUp("Pedido Alterado!")
                         }catch (e: Exception){
                             messagePopUp("Erro ao alterar.\n"+e.message)
                         }
                         lista.clear()
-                        lista = dao.obterListaClientes()
+                        lista = dao.obterListaPedidos()
 
                     }
                 }
@@ -265,14 +333,20 @@ class PedidoActivity : AppCompatActivity() {
         binding.popUp.postDelayed({binding.message.visibility = View.GONE}, 1500)
         binding.popUp.postDelayed({binding.textMessage.text = ""}, 1500)
         binding.popUp.postDelayed({binding.popUp.visibility = View.GONE}, 1500)
-        binding.layoutButtons.visibility = View.VISIBLE
+        binding.popUp.postDelayed({binding.layoutButtons.visibility = View.VISIBLE}, 1500)
     }
 
     private fun limparCamposInserir(){
-        binding.cpfInserir.text.clear()
-        binding.nomeInserir.text.clear()
-        binding.telefoneInserir.text.clear()
-        binding.enderecoInserir.text.clear()
+        binding.cliente.text = ""
+        val listView = binding.produtos
+
+        val lista_vazia = ArrayList<String>()
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista_vazia)
+
+        adapter.notifyDataSetChanged()
+
+        listView.adapter = adapter
     }
 
     private fun listaSpinner(i: Int, lista: ArrayList<Pedido>){
@@ -310,20 +384,16 @@ class PedidoActivity : AppCompatActivity() {
         }
     }
 
-    private fun listarSpinnerInserir(i: Int){
+    private fun listarSpinnerInserir(i: Int, listaClientes: ArrayList<Cliente>, listaProdutos: ArrayList<Produto>){
         if (i == 1){
 
-            val dao = ClienteDAO()
-
-            val lista = dao.obterListaClientes()
-
-            val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, lista)
+            val adapter = ArrayAdapter<Cliente>(this, android.R.layout.simple_spinner_item, listaClientes)
 
             adapter.setDropDownViewResource(R.layout.spinner_item_layout)
 
             adapter.notifyDataSetChanged()
 
-            Log.i("lista", lista.toString())
+            Log.i("lista", listaClientes.toString())
 
             binding.spinnerClienteInserir.adapter = adapter
             adapter.notifyDataSetChanged()
@@ -331,17 +401,14 @@ class PedidoActivity : AppCompatActivity() {
 
         if (i == 2){
 
-            val dao = ProdutoDAO()
 
-            val lista = dao.obterListaProdutos()
-
-            val adapter = ArrayAdapter<Produto>(this, android.R.layout.simple_spinner_item, lista)
+            val adapter = ArrayAdapter<Produto>(this, android.R.layout.simple_spinner_item, listaProdutos)
 
             adapter.setDropDownViewResource(R.layout.spinner_item_layout)
 
             adapter.notifyDataSetChanged()
 
-            Log.i("lista", lista.toString())
+            Log.i("lista", listaProdutos.toString())
 
             binding.spinnerProdutoInserir.adapter = adapter
             adapter.notifyDataSetChanged()
@@ -355,7 +422,7 @@ class PedidoActivity : AppCompatActivity() {
         binding.enderecoAlterar.text.clear()
     }
 
-    private fun preencherCamposAlterar(cliente: Cliente){
+    private fun preencherCamposAlterar(pedido: Pedido){
         binding.cpfAlterar.setText(cliente.cpf)
         binding.nomeAlterar.setText(cliente.nome)
         binding.telefoneAlterar.setText(cliente.telefone)

@@ -6,4 +6,8 @@ data class Pedido(
     var data: String,
     var produtos: ArrayList<Produto>,
     var quantidade: ArrayList<Int>
-)
+){
+    override fun toString(): String {
+        return "$id - $data - $cliente - $produtos"
+    }
+}

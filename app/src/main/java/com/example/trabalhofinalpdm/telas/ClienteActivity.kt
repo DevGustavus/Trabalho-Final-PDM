@@ -75,6 +75,8 @@ class ClienteActivity : AppCompatActivity() {
                         dao.inserirCliente(Cliente(null, cpf, nome, telefone, endereco))
                         limparCamposInserir()
                         messagePopUp("Inserido com sucesso!")
+                        lista.clear()
+                        lista = dao.obterListaClientes()
                     }catch (e: Exception){
                         limparCamposInserir()
                         messagePopUp("Erro ao inserir.\n"+e.message)
@@ -177,10 +179,10 @@ class ClienteActivity : AppCompatActivity() {
                         messagePopUp("Preencha todos os campos!")
                     }else {
                         try {
-                            cliente.cpf = cpf
-                            cliente.nome = nome
-                            cliente.telefone = telefone
-                            cliente.endereco = endereco
+                            cliente.cpf = binding.cpfAlterar.text.toString()
+                            cliente.nome = binding.nomeAlterar.text.toString()
+                            cliente.telefone = binding.telefoneAlterar.text.toString()
+                            cliente.endereco = binding.enderecoAlterar.text.toString()
                             dao.atualizarCliente(cliente)
                             messagePopUp("Cliente Alterado!")
                         }catch (e: Exception){
@@ -220,7 +222,7 @@ class ClienteActivity : AppCompatActivity() {
         binding.popUp.postDelayed({binding.message.visibility = View.GONE}, 1500)
         binding.popUp.postDelayed({binding.textMessage.text = ""}, 1500)
         binding.popUp.postDelayed({binding.popUp.visibility = View.GONE}, 1500)
-        binding.layoutButtons.visibility = View.VISIBLE
+        binding.popUp.postDelayed({binding.layoutButtons.visibility = View.VISIBLE}, 1500)
     }
 
     private fun limparCamposInserir(){

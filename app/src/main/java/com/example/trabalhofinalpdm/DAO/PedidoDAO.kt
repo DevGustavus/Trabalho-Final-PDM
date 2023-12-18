@@ -87,30 +87,37 @@ class PedidoDAO {
         })
     }
 
-    fun obterListaPedidos(): MutableLiveData<List<Pedido>> {
-        val listaPedidosLiveData = MutableLiveData<List<Pedido>>()
-
-        referencia.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val listaPedidos = mutableListOf<Pedido>()
-
-                for (pedidoSnapshot in snapshot.children) {
-                    val pedido = pedidoSnapshot.getValue(Pedido::class.java)
-                    pedido?.let {
-                        listaPedidos.add(it)
+    fun obterListaPedidos(): ArrayList<Pedido> {
+        //Apresentação dos elementos.
+        val listaPedidos = ArrayList<Pedido>()
+        referencia.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                if (snapshot.exists())
+                {
+                    var gson = Gson()
+                    for (i in snapshot.children)
+                    {
+                        val json = gson.toJson(i.value)
+                        val pedido = gson.fromJson(json, Pedido::class.java)
+                        Log.i("Teste", "-------------------")
+                        Log.i("Teste", "Id: ${pedido.id}")
+                        Log.i("Teste", "Cliente: ${pedido.cliente}")
+                        Log.i("Teste", "Data: ${pedido.data}")
+                        Log.i("Teste", "Produtos: ${pedido.produtos}")
+                        Log.i("Teste", "Quantidade: ${pedido.quantidade}")
+                        Log.i("Teste", "-------------------")
+                        listaPedidos.add(Pedido(pedido.id,pedido.cliente,pedido.data,pedido.produtos,pedido.quantidade))
                     }
+                    Log.i("Teste", "Array: ${listaPedidos}")
                 }
-
-                // Atualiza o LiveData com a lista de pedidos
-                listaPedidosLiveData.value = listaPedidos
             }
-
             override fun onCancelled(error: DatabaseError) {
-                // Se ocorrer um erro, você pode lidar com isso aqui
+                Log.i("MENSAGEM", "Erro: $error")
             }
         })
-
-        return listaPedidosLiveData
+        return listaPedidos
     }
 
     fun atualizarPedido(pedido: Pedido) {

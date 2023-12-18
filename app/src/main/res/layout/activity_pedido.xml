@@ -181,6 +181,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Adicionar Cliente"
+                android:background="@drawable/button_background"
                 android:textColorHint="@color/white"
                 android:layout_marginBottom="20dp"
                 style="@style/textBtnMenu"/>
@@ -198,11 +199,13 @@
                 android:layout_height="wrap_content"
                 android:text="Adicionar"
                 android:visibility="gone"
+                android:background="@drawable/button_background"
+                android:layout_marginBottom="20dp"
                 style="@style/textBtnMenu"/>
 
             <ListView
                 android:id="@+id/produtos"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:visibility="gone"
@@ -213,6 +216,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Adicionar Produto"
+                android:background="@drawable/button_background"
                 android:textColorHint="@color/white"
                 android:layout_marginBottom="20dp"
                 style="@style/textBtnMenu"/>
@@ -239,6 +243,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Adicionar"
+                android:background="@drawable/button_background"
+                android:layout_marginBottom="15dp"
                 android:visibility="gone"
                 style="@style/textBtnMenu"/>
 

@@ -75,6 +75,8 @@ class ProdutoActivity : AppCompatActivity() {
                         dao.inserirProduto(Produto(null, descricao, valor))
                         limparCamposInserir()
                         messagePopUp("Inserido com sucesso!")
+                        lista.clear()
+                        lista = dao.obterListaProdutos()
                     }catch (e: Exception){
                         limparCamposInserir()
                         messagePopUp("Erro ao inserir.\n"+e.message)
@@ -97,6 +99,8 @@ class ProdutoActivity : AppCompatActivity() {
             binding.layoutListar.visibility = View.VISIBLE
 
             val listView = binding.listViewMostrar
+
+
 
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lista)
 
@@ -173,8 +177,8 @@ class ProdutoActivity : AppCompatActivity() {
                         messagePopUp("Preencha todos os campos!")
                     }else {
                         try {
-                            produto.descricao = descricao
-                            produto.valor = valor
+                            produto.descricao = binding.descricaoAlterar.text.toString()
+                            produto.valor = binding.valorAlterar.text.toString().toFloat()
                             dao.atualizarProduto(produto)
                             messagePopUp("Produto Alterado!")
                         }catch (e: Exception){
@@ -214,7 +218,7 @@ class ProdutoActivity : AppCompatActivity() {
         binding.popUp.postDelayed({binding.message.visibility = View.GONE}, 1500)
         binding.popUp.postDelayed({binding.textMessage.text = ""}, 1500)
         binding.popUp.postDelayed({binding.popUp.visibility = View.GONE}, 1500)
-        binding.layoutButtons.visibility = View.VISIBLE
+        binding.popUp.postDelayed({binding.layoutButtons.visibility = View.VISIBLE}, 1500)
     }
 
     private fun limparCamposInserir(){
