@@ -73,9 +73,10 @@ class PedidoDAO {
                         Log.i("Teste", "Id: ${pedido.id}")
                         Log.i("Teste", "Cliente: ${pedido.cliente}")
                         Log.i("Teste", "Data: ${pedido.data}")
-                        Log.i("Teste", "Itens Pedido: ${pedido.itensPedido}")
+                        Log.i("Teste", "Produtos: ${pedido.produtos}")
+                        Log.i("Teste", "Quantidade: ${pedido.quantidade}")
                         Log.i("Teste", "-------------------")
-                        listaPedidos.add(Pedido(pedido.id,pedido.cliente,pedido.data,pedido.itensPedido))
+                        listaPedidos.add(Pedido(pedido.id,pedido.cliente,pedido.data,pedido.produtos,pedido.quantidade))
                     }
                     Log.i("Teste", "Array: ${listaPedidos}")
                 }
@@ -113,32 +114,16 @@ class PedidoDAO {
     }
 
     fun atualizarPedido(pedido: Pedido) {
-        // Verifica se o pedido tem um ID válido
-        val pedidoId = pedido.id ?: return
-
-        /*
-        // Cria um mapa com os dados do pedido que serão atualizados
-        val atualizacaoPedido = mapOf(
-            "cliente" to mapOf(
-                "id" to pedido.cliente.id,
-                "cpf" to pedido.cliente.cpf,
-                "nome" to pedido.cliente.nome,
-                "telefone" to pedido.cliente.telefone,
-                "endereco" to pedido.cliente.endereco
-            ),
-            "data" to pedido.data,
-            "itensPedido" to pedido.itensPedido
-        )
-        */
-
-        val atualizacaoPedido = mapOf(
-            "cliente" to pedido.id,
-            "data" to pedido.data,
-            "itensPedido" to pedido.itensPedido
-        )
+        Log.i("Atualizar", "-------------------")
+        Log.i("Atualizar", "Id: ${pedido.id}")
+        Log.i("Atualizar", "cliente: ${pedido.cliente}")
+        Log.i("Atualizar", "data: ${pedido.data}")
+        Log.i("Atualizar", "produtos: ${pedido.produtos}")
+        Log.i("Atualizar", "quantidade: ${pedido.quantidade}")
+        Log.i("Atualizar", "-------------------")
 
         // Atualiza os dados no Firebase
-        referencia.child(pedidoId.toString()).updateChildren(atualizacaoPedido)
+        referencia.child(pedido.id.toString()).setValue(pedido)
             .addOnSuccessListener {
                 // A operação foi bem-sucedida
                 Log.d("PedidoDAO", "Pedido atualizado com sucesso")

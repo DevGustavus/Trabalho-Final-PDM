@@ -119,24 +119,21 @@ class ProdutoDAO {
     }
 
     fun atualizarProduto(produto: Produto) {
-        // Verifica se o produto tem um ID válido
-        val produtoId = produto.id ?: return
-
-        // Cria um mapa com os dados do produto que serão atualizados
-        val atualizacaoProduto = mapOf(
-            "descricao" to produto.descricao,
-            "valor" to produto.valor
-        )
+        Log.i("Atualizar", "-------------------")
+        Log.i("Atualizar", "Id: ${produto.id}")
+        Log.i("Atualizar", "descricao: ${produto.descricao}")
+        Log.i("Atualizar", "valor: ${produto.valor}")
+        Log.i("Atualizar", "-------------------")
 
         // Atualiza os dados no Firebase
-        referencia.child(produtoId.toString()).updateChildren(atualizacaoProduto)
+        referencia.child(produto.id.toString()).setValue(produto)
             .addOnSuccessListener {
                 // A operação foi bem-sucedida
                 Log.d("ProdutoDAO", "Produto atualizado com sucesso")
             }
             .addOnFailureListener { e ->
                 // A operação falhou
-                Log.e("ProdutoDAO", "Erro ao atualizar produto", e)
+                Log.e("ProdutoDAO", "Erro ao atualizar Produto", e)
             }
     }
 }

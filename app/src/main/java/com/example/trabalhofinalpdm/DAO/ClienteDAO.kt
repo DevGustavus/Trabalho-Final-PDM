@@ -120,19 +120,16 @@ class ClienteDAO {
     }
 
     fun atualizarCliente(cliente: Cliente) {
-        // Verifica se o cliente tem um ID válido
-        val clienteId = cliente.id ?: return
-
-        // Cria um mapa com os dados do cliente que serão atualizados
-        val atualizacaoCliente = mapOf(
-            "cpf" to cliente.cpf,
-            "nome" to cliente.nome,
-            "telefone" to cliente.telefone,
-            "endereco" to cliente.endereco
-        )
+        Log.i("Atualizar", "-------------------")
+        Log.i("Atualizar", "Id: ${cliente.id}")
+        Log.i("Atualizar", "CPF: ${cliente.cpf}")
+        Log.i("Atualizar", "Nome: ${cliente.nome}")
+        Log.i("Atualizar", "Telefone: ${cliente.telefone}")
+        Log.i("Atualizar", "Endereco: ${cliente.endereco}")
+        Log.i("Atualizar", "-------------------")
 
         // Atualiza os dados no Firebase
-        referencia.child(clienteId.toString()).updateChildren(atualizacaoCliente)
+        referencia.child(cliente.id.toString()).setValue(cliente)
             .addOnSuccessListener {
                 // A operação foi bem-sucedida
                 Log.d("ClienteDAO", "Cliente atualizado com sucesso")

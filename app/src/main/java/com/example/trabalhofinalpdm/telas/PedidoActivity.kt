@@ -15,6 +15,7 @@ import com.example.trabalhofinalpdm.classes.Pedido
 import com.example.trabalhofinalpdm.classes.Produto
 import com.example.trabalhofinalpdm.databinding.ActivityPedidoBinding
 
+
 class PedidoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPedidoBinding
@@ -63,6 +64,7 @@ class PedidoActivity : AppCompatActivity() {
 
         window.statusBarColor = getColor(R.color.black)
 
+        var lista = dao.obterListaPedidos()
         var listaCliente = daoCliente.obterListaClientes()
         var listaProduto = daoProduto.obterListaProdutos()
 
@@ -172,7 +174,7 @@ class PedidoActivity : AppCompatActivity() {
                 val cliente = lista[Math.abs(pos)]
 
                 try {
-                    dao.excluirCliente(cliente.id!!)
+                    dao.excluirPedido(cliente.id!!)
                     messagePopUp("Cliente excluído!")
                 }catch (e: Exception){
                     messagePopUp("Erro ao deletar.\n"+e.message)
@@ -224,7 +226,7 @@ class PedidoActivity : AppCompatActivity() {
                             cliente.nome = nome
                             cliente.telefone = telefone
                             cliente.endereco = endereco
-                            dao.atualizarCliente(cliente)
+                            dao.atualizarPedido(cliente)
                             messagePopUp("Cliente Alterado!")
                         }catch (e: Exception){
                             messagePopUp("Erro ao alterar.\n"+e.message)
